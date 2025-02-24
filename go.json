@@ -24,7 +24,7 @@
       "}$0"
     ]
   },
-  "Return on error": {
+  "Return err on error": {
     "prefix": "ire",
     "body": [
       "if err != nil {",
@@ -76,7 +76,7 @@
   // RETURNS
   // ===================================================================================
   "return nil": {
-    "prefix": "rn",
+    "prefix": "rnil",
     "body": "return nil"
   },
   "return err": {
@@ -131,11 +131,7 @@
   },
   "log fatalf": {
     "prefix": "lff",
-    "body": "log.Fatalf(\"$1: %+v\", err$1)$0"
-  },
-  "return nil, err format wrap": {
-    "prefix": "rnef",
-    "body": "return ${2:nil}, fmt.Errorf(\"${1:error}: %w\", err)$0"
+    "body": "log.Fatalf(\"$1: %+v\", err$2)$0"
   },
   // ===================================================================================
   // CONTROL FLOW
@@ -151,7 +147,15 @@
   "For k, v range on values": {
     "prefix": "frkv",
     "body": [
-      "for ${1:k}, ${2:v} := range ${2:values} {",
+      "for ${1:k}, ${2:v} := range ${3:values} {",
+      "    $0",
+      "}"
+    ]
+  },
+  "For k range on values": {
+    "prefix": "frk",
+    "body": [
+      "for ${1:v} := range ${2:values} {",
       "    $0",
       "}"
     ]
@@ -274,6 +278,16 @@
       "}"
     ]
   },
+  "return nested function": {
+    "prefix": "nfn",
+    "body": [
+      "func $1($2) func($3)$4 {",
+      "    return func($5$3)$4 {",
+      "        $6",
+      "    }",
+      "}$0"
+    ]
+  },
   "main function": {
     "prefix": "fmain",
     "body": [
@@ -283,11 +297,11 @@
     ]
   },
   "defer IIFE": {
-    "prefix": "defun",
+    "prefix": "defunc",
     "body": [
       "defer func() {",
       "    if err := $1; err != nil {",
-      "        log.Println(\"could not close:\", err)",
+      "        log.Printf(\"${2:could not close}: %v\", err)",
       "    }",
       "}()$0"
     ]
